@@ -1,0 +1,21 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build-env
+WORKDIR /app
+
+# Copy csproj and restore as distinct layers
+
+# COPY <<from>> <<to>
+
+# Copy from docker build context to working diretory
+COPY .  .
+
+# restore all the porject attached to .sln fileout
+
+# RUN dotnet restore
+
+RUN dotnet publish -c Release -o /app/out
+
+#Build runtime image
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
+WORKDIR /app
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "ASPNETSTATICUSER.dll"]
